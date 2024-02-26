@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Twelve Artists | Markus Keibel</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+	<style>
+		html,body{height:100%; vertical-align:top; font-family: 'Open Sans', sans-serif;}
+		body{margin:0; padding:0; line-height:1.5; background:#fff;}
+		*,*:before,*:after{ box-sizing:border-box;}
+        #showData{
+			display:flex;
+			flex-wrap:wrap;
+			align-items:center;
+			margin:auto;
+		}        
+        #showData img 
+        {
+			flex:0 0 25%;
+			max-width:25%;
+			height:22vh;
+			object-fit:cover;
+			transition:0.3s ease-in-out;
+			
+        }
+		.main-content{ width:100%; margin:0; padding:0; height:100%; display:flex; vertical-align:middle;}
+		.gallery{ width:75%; padding:6vh 3vw;		}
+		.info{ width:25%; border-style: solid ; border-width:0 0 0 3px; border-color: #666;  padding:3vh 1vw;}
+		p{ font-size:1.1vw; margin:0;}
+		.switcher_btn.yellow {
+			background: #bd3437;
+		}
+		.switcher_btn {
+			width: 2rem;
+			height: 2rem;
+			border-radius: 2rem;
+			cursor: pointer;
+			background: #fff;
+		}
+		p.colored{ color:#bd3437;}
+		body.yellow{background: #bd3437;}
+		body.yellow p{ color:#fff;}
+		body.yellow p.colored{ color:#fff;}
+		.header-info{ margin-bottom:7%; display: flex; justify-content: space-between; align-items: flex-start;}
+		.logo{ font-size:2vw; text-transform:uppercase; max-width: 50%; width: auto; line-height: 1.2; text-align: center;}
+		body.yellow .logo{ color:#fff;}
+		body.yellow .info{ border-color:#fff;}
+		
+		@media screen and (max-width:767px){
+			.main-content{ flex-direction:column;}
+			.gallery{width:100%; padding-top:4vh; padding-bottom:4vh;}
+			.info{ width:100%; border-width:3px 0 0 0; padding-left:3vw; padding-right:3vw;}
+			.gallery{ height:75vh;}
+			#showData img{ height:15.75vh}
+			.logo{ font-size:30px; max-width:170px;}
+			p{ font-size:16px;}
+			.header-info{ margin-bottom:5%;}
+		}
+    </style>
+</head>
+<body>
+	<div class="main-content">
+		<div class="gallery">
+			<div id='showData'></div>
+		</div>
+		<div class="info">
+			<div class="header-info">
+				<div class="style_switcher"><div class="switcher_btn yellow"></div></div>
+				<div class="logo">MARKUS KEIBEL</div>
+			</div>
+			<div class="content">
+				<p class="colored"><strong>Alles in allem, Simone de Beauvoir</strong></p>
+				<p><strong>by MARKUS KEIBEL<br><br></strong></p>
+				<p>Acryl, epoxy, ash on alluminium, steel and<br>
+					magnets. 160x240cm. 2021<br><br>
+					The work consists of sixteen steel plates,<br>
+					each 60x40 cm, magnetically attached to a<br>
+					steel frame. The steel plates can be<br>
+					exchanged as desired, allowing more than <br>
+					20 trillion variations.<br><br>
+					16!<br>
+					16 factorial<br>
+					20.922.789.888.000
+				</p>
+			</div>
+		</div>
+	</div>
+    
+</body>
+<script>
+    $(document).ready(function () {
+       randomArtWork();
+	   
+	   setInterval(randomArtWork, 3000);
+    });
+	
+	function randomArtWork(){
+		// console.log("Working");
+		$.getJSON("../../data-with-image.json", function (data) {
+
+			var arrItems = [];      // The array to store JSON items.
+			$.each(data, function (index, value) {
+				arrItems.push(value);
+				
+			});	
+			
+			function randomize(arr) {
+				var i, j, tmp;
+				for (i = arr.length - 1; i > 0; i--) {
+					j = Math.floor(Math.random() * (i + 1));
+					tmp = arr[i];
+					arr[i] = arr[j];
+					arr[j] = tmp;
+				}
+				return arr;
+			}
+	
+			var arr = arrItems;		
+			arrItems = randomize(arr);
+			
+			// console.log(arrItems);
+			
+			$('#showData').html('');
+			for (var i = 0; i < arrItems.length; i++) {
+				var img = document.createElement('img');
+				img.src = arrItems[i].Image;   // The image source from JSON array.	
+				$('#showData').append(img);
+			}	
+		}); 
+	}
+	
+	
+	// Theme color switcher
+	$(document).ready(function(e){
+		$(document).on('click', '.switcher_btn.yellow', function(e){
+			$('body').addClass('yellow');
+			$('.switcher_btn').removeClass('yellow').addClass('active');
+		});
+						
+		$(document).on('click', '.switcher_btn.active', function(e){
+			$('body').removeClass('yellow');
+			$('.switcher_btn').addClass('yellow').removeClass('active');
+		});
+		
+	});
+	
+		
+</script>
+</html>
